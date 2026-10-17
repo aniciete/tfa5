@@ -71,7 +71,7 @@
                     <div class="node-card">
                         <div class="node-kicker">STAGE 04 &bull; RESPONSE</div>
                         <strong class="flow-step-title">4. View Presentation</strong>
-                        <p class="flow-step-text">The Blade view iterates the data with <code>@foreach</code>, applies HTML escaping, and returns the finished response to the client.</p>
+                        <p class="flow-step-text">The Blade view iterates the data with <code>@@foreach</code>, applies HTML escaping, and returns the finished response to the client.</p>
                     </div>
                 </li>
             </ol>
