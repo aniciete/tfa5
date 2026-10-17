@@ -100,8 +100,8 @@
                         <span class="ledger-value">None (Phase 1 Pipeline Validation)</span>
                     </div>
                     <div class="ledger-row">
-                        <span class="ledger-term">Controller State:</span>
-                        <span class="ledger-value">App\Http\Controllers\CustomerController &amp; UserController</span>
+                        <span class="ledger-term">Controllers:</span>
+                        <span class="ledger-value">CustomerController &amp; UserController</span>
                     </div>
                 </div>
             </div>

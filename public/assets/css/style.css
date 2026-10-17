@@ -1029,6 +1029,8 @@ img, svg {
     color: var(--cream-bg);
     font-weight: 600;
     text-align: right;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* --------------------------------------------------------------------------
