@@ -3,7 +3,7 @@
 **Course:** IT0049 (Web System Technologies)  
 **Assessment:** Technical Formative Assessment 5 (TFA5)  
 **Framework:** Laravel 13.x (PHP 8.5)  
-**Hosted Application:** [https://tfa5.freedev.app](https://tfa5.freedev.app)  
+**Hosted Application:** [http://tfa5.infinityfreeapp.com](http://tfa5.infinityfreeapp.com) ([HTTPS Mirror](https://tfa5.infinityfreeapp.com))  
 **GitHub Repository:** [https://github.com/aniciete/tfa5](https://github.com/aniciete/tfa5)
 
 ---
@@ -25,13 +25,13 @@ This project is the Laravel reconstruction of the Point-of-Sale (POS) Foundation
 
 ## 2. Technical Stack & Prerequisites
 
-- **Language:** PHP 8.3 or higher (tested on PHP 8.5.11)
-- **Required PHP Extensions:** `pdo_sqlite`, `mbstring`, `openssl`, `curl`, `xml`, `bcmath`, `intl`, `gd`
+- **Language:** PHP 8.3 or higher (tested on PHP 8.5.11; deployment runs on PHP 8.2+)
+- **Required PHP Extensions:** `pdo_sqlite`, `pdo_mysql`, `mbstring`, `openssl`, `curl`, `xml`, `bcmath`, `intl`, `gd`, `zip`
 - **Package Managers:** Composer 2.x & npm 10.x / Node.js 22.x
 - **Framework:** Laravel 13.x
 - **Frontend & Bundling:** Blade + Tailwind CSS v4 + Vite
 - **Typography & Theme:** Bright-Market Design System (Self-hosted `Bricolage Grotesque` and `IBM Plex Mono`)
-- **Database:** SQLite (default for development; migrations and seeders included in `database/`)
+- **Database:** SQLite (default for development; migrations, seeders, and MySQL schema export in `database/`)
 
 ---
 
@@ -113,15 +113,27 @@ The test suite (`tests/Feature/PosFoundationsTest.php`) validates:
 
 ---
 
-## 6. InfinityFree & Production Deployment Procedure
+## 6. InfinityFree & FTP Deployment Architecture
 
-This project includes automated packaging and shared-hosting configurations for deployment:
+### 6.1 Shared Hosting & CSS Resilience Strategy
+Deploying modern Laravel applications to shared hosting environments like InfinityFree involves several known challenges that were addressed in this implementation:
+1. **Preventing Pure-FTPd Timeouts:** Uploading thousands of files individually over FTP triggers strict Pure-FTPd connection limits and drops transfers. Instead, the deployment utilizes a **single-archive upload + server-side extraction** pattern:
+   - Packaging bundles all production files and lean dependencies into `tfa5-infinityfree.zip`.
+   - `curl -T` uploads the single archive and `extract.php` in a single reliable connection.
+   - `extract.php` unpacks the archive via PHP's native `ZipArchive` extension directly inside `/htdocs`, cleans up the ZIP, and self-destructs.
+2. **Dual-Path Static Asset Resolution:** On InfinityFree, the document root is permanently bound to `/htdocs`. To ensure all stylesheets, fonts, and icons resolve cleanly without 404 or MIME errors, assets are mirrored at both the root level (`/assets/`, `/build/`) and within `/public/`.
+3. **Eliminating Mixed Content SSL Errors:** Modern browsers block insecure stylesheets when a user navigates via HTTPS. The application configures trusted proxies (`$middleware->trustProxies(at: '*')`) in `bootstrap/app.php` and outputs protocol-relative asset links (`//tfa5.infinityfreeapp.com/assets/css/style.css`), ensuring assets match the protocol under both HTTP and HTTPS.
 
-1. Generate a lean production build archive (excluding development packages and test suites):
-   ```bash
-   ./build-infinityfree-zip.sh
-   ```
-2. In your hosting control panel:
-   - Ensure the PHP version is set to **PHP 8.2+**.
-3. In the online file manager, upload and extract `tfa5-infinityfree.zip` into your document root.
-4. Verify the live site at: **[https://tfa5.freedev.app](https://tfa5.freedev.app)**.
+### 6.2 Automated Deployment Execution
+Deploy the application with a single command via Bash:
+```bash
+./deploy-infinityfree.sh
+```
+Or via Python:
+```bash
+python3 scripts/deploy_infinityfree.py
+```
+
+The script automatically packages the application, transfers files to `ftpupload.net`, removes the default `index2.html` placeholder, and provides the extraction trigger.
+
+Live application: **[http://tfa5.infinityfreeapp.com/](http://tfa5.infinityfreeapp.com/)**
