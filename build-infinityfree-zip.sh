@@ -6,9 +6,10 @@ TMP_DIR="/tmp/tfa5-deploy-$$"
 OUTPUT_ZIP="$DIR/tfa5-infinityfree.zip"
 
 echo "==> Building frontend assets for production..."
+cd "$DIR"
 npm run build
 
-echo "==> Packaging lean production build for deployment (tfa5.freedev.app)..."
+echo "==> Packaging lean production build for InfinityFree (tfa5.infinityfreeapp.com)..."
 rm -rf "$TMP_DIR" "$OUTPUT_ZIP"
 mkdir -p "$TMP_DIR"
 
@@ -20,18 +21,45 @@ rsync -av \
   --exclude="tests" \
   --exclude="*.zip" \
   --exclude="build-infinityfree-zip.sh" \
+  --exclude="deploy-infinityfree.sh" \
+  --exclude="scripts" \
   "$DIR/" "$TMP_DIR/" > /dev/null
 
 # Copy essential root configuration files
-[ -f "$DIR/.env.example" ] && cp "$DIR/.env.example" "$TMP_DIR/.env.example"
 [ -f "$DIR/.htaccess" ] && cp "$DIR/.htaccess" "$TMP_DIR/.htaccess"
+[ -f "$DIR/index.php" ] && cp "$DIR/index.php" "$TMP_DIR/index.php"
 [ -f "$DIR/public/.htaccess" ] && cp "$DIR/public/.htaccess" "$TMP_DIR/public/.htaccess"
+
+# Mirror static assets to root for dual-resolution on shared hosting
+if [ -d "$DIR/public/assets" ]; then
+    mkdir -p "$TMP_DIR/assets"
+    cp -r "$DIR/public/assets/"* "$TMP_DIR/assets/"
+fi
+
+if [ -d "$DIR/public/build" ]; then
+    mkdir -p "$TMP_DIR/build"
+    cp -r "$DIR/public/build/"* "$TMP_DIR/build/"
+fi
+
+[ -f "$DIR/public/favicon.svg" ] && cp "$DIR/public/favicon.svg" "$TMP_DIR/favicon.svg"
+[ -f "$DIR/public/favicon.ico" ] && cp "$DIR/public/favicon.ico" "$TMP_DIR/favicon.ico"
 
 # Use production env template if available
 if [ -f "$DIR/env.production" ]; then
     cp "$DIR/env.production" "$TMP_DIR/.env"
 elif [ -f "$DIR/.env.production" ]; then
     cp "$DIR/.env.production" "$TMP_DIR/.env"
+fi
+
+# Ensure SQLite database and SQL schema export are included
+if [ -f "$DIR/database/database.sqlite" ]; then
+    mkdir -p "$TMP_DIR/database"
+    cp "$DIR/database/database.sqlite" "$TMP_DIR/database/database.sqlite"
+fi
+
+if [ -f "$DIR/database/schema_export.sql" ]; then
+    mkdir -p "$TMP_DIR/database"
+    cp "$DIR/database/schema_export.sql" "$TMP_DIR/database/schema_export.sql"
 fi
 
 # Ensure storage directories exist with proper structure
@@ -52,13 +80,13 @@ rm -rf "$TMP_DIR"
 
 # Validate package integrity
 echo "==> Verifying package contents..."
-for req in "public/index.php" "artisan" "vendor/autoload.php" "public/build/manifest.json"; do
+for req in "public/index.php" "index.php" ".htaccess" "public/.htaccess" "artisan" "vendor/autoload.php" "public/build/manifest.json" "public/assets/css/style.css" "assets/css/style.css" ".env"; do
     if ! unzip -l "$OUTPUT_ZIP" | grep -q "$req"; then
         echo "Error: Required file $req is missing from $OUTPUT_ZIP" >&2
         exit 1
     fi
 done
 
-echo "==> Verification passed! All required files are present."
+echo "==> Verification passed! All required files and dual-path assets are present."
 echo "==> Build successful: $OUTPUT_ZIP"
 ls -lh "$OUTPUT_ZIP"
