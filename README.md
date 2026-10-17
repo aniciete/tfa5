@@ -1,58 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Point-of-Sale (POS) Foundations
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Course:** IT0049 (Web System Technologies)  
+**Assessment:** Technical Formative Assessment 5 (TFA5)  
+**Framework:** Laravel 13.x (PHP 8.5)  
+**Hosted Application:** [https://tfa5.freedev.app](https://tfa5.freedev.app)  
+**GitHub Repository:** [https://github.com/aniciete/tfa5](https://github.com/aniciete/tfa5)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Project Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project is the Laravel reconstruction of the Point-of-Sale (POS) Foundations system originally established in TFA1. It demonstrates the Model-View-Controller (MVC) architectural pattern within Laravel, focusing on clean URL routing in `routes/web.php`, dedicated controller action methods, Blade templating layouts, and temporary in-memory static array data structures prior to permanent relational database integration.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Required Pages and Route Table
 
-## Learning Laravel
+| URL Route | Route Name | Controller Action | View Template | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| `/` | `home` | `App\Http\Controllers\PageController::home` | `pages/home.blade.php` | POS application landing page with architectural overview and quick navigation |
+| `/about` | `about` | `App\Http\Controllers\PageController::about` | `pages/about.blade.php` | Laravel MVC request execution lifecycle and architectural storage memo |
+| `/customers` | `customers.index` | `App\Http\Controllers\CustomerController::index` | `customers/index.blade.php` | Customer accounts directory listing full name, email, and phone |
+| `/users` | `users.index` | `App\Http\Controllers\UserController::index` | `users/index.blade.php` | Staff user accounts directory listing username, full name, and role |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 2. Technical Stack & Prerequisites
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Language:** PHP 8.3 or higher (tested on PHP 8.5.11)
+- **Required PHP Extensions:** `pdo_sqlite`, `mbstring`, `openssl`, `curl`, `xml`, `bcmath`, `intl`, `gd`
+- **Package Managers:** Composer 2.x & npm 10.x / Node.js 22.x
+- **Framework:** Laravel 13.x
+- **Frontend & Bundling:** Blade + Tailwind CSS v4 + Vite
+- **Typography & Theme:** Bright-Market Design System (Self-hosted `Bricolage Grotesque` and `IBM Plex Mono`)
+- **Database:** SQLite (default for development; migrations and seeders included in `database/`)
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 3. Local Development Setup
 
+### 3.1 Clone the Repository
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/aniciete/tfa5.git
+cd tfa5
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 3.2 Install Dependencies
+Install PHP dependencies:
+```bash
+composer install
+```
+Install frontend dependencies:
+```bash
+npm install
+```
 
-## Contributing
+### 3.3 Configure Environment File
+Copy the example environment template to `.env`:
+```bash
+cp .env.example .env
+```
+Generate the application key:
+```bash
+php artisan key:generate
+```
+Run database migrations and seeders (optional for runtime, fulfills submission criteria):
+```bash
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3.4 Build Frontend Assets
+Compile assets for development or production:
+```bash
+npm run build
+```
 
-## Code of Conduct
+### 3.5 Start the Local Development Server
+To launch both the PHP development server and Vite hot reload concurrently:
+```bash
+composer run dev
+```
+Or start the backend server individually:
+```bash
+php artisan serve
+```
+Access the application locally at: **[http://localhost:8000](http://localhost:8000)** (or the port indicated in terminal output).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 4. Architectural & Data Design
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Static In-Memory Data Source Implementation
+In accordance with the TFA5 laboratory activity instructions:
+- `App\Http\Controllers\CustomerController::index()` defines an in-memory static array containing 5 customer profiles (`full_name`, `email`, `phone`).
+- `App\Http\Controllers\UserController::index()` defines an in-memory static array containing 5 staff user profiles (`username`, `full_name`, `role`).
+- Blade views iterate these data structures using `@foreach` directives with automated HTML escaping.
+- Complementary database migrations, model seeders (`CustomerSeeder`, `UserSeeder`), and a SQL schema export (`database/schema_export.sql`) are provided to fulfill grading rubric requirements.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 5. Running Automated Tests
+
+Run the automated test suite using Artisan:
+```bash
+php artisan test
+```
+The test suite (`tests/Feature/PosFoundationsTest.php`) validates:
+- HTTP 200 OK responses across all four defined routes (`/`, `/about`, `/customers`, `/users`).
+- Accessible semantic landmarks (`role="banner"`, `role="main"`, `role="contentinfo"`, and skip link `#main-content`).
+- Accessible active navigation tracking (`aria-current="page"`).
+- Accurate `@foreach` rendering of all 5 customer records and 5 staff records.
+- Proper HTTP 404 response for unmapped routes.
+- Integrity of local assets (`assets/css/style.css`, `favicon.svg`, and self-hosted `.woff2` font files).
+
+---
+
+## 6. InfinityFree & Production Deployment Procedure
+
+This project includes automated packaging and shared-hosting configurations for deployment:
+
+1. Generate a lean production build archive (excluding development packages and test suites):
+   ```bash
+   ./build-infinityfree-zip.sh
+   ```
+2. In your hosting control panel:
+   - Ensure the PHP version is set to **PHP 8.2+**.
+3. In the online file manager, upload and extract `tfa5-infinityfree.zip` into your document root.
+4. Verify the live site at: **[https://tfa5.freedev.app](https://tfa5.freedev.app)**.
