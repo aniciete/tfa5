@@ -1,144 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="home-grid">
-    <!-- Asymmetric Top Section: Oversized Headline + Facts Panel -->
-    <section class="home-hero" aria-labelledby="hero-title">
-        <div class="hero-mast">
-            <div class="tag-row">
-                <span class="market-tag">Laravel 13 Core Architecture</span>
-                <span class="status-indicator" aria-label="System status operational">
-                    <span class="status-pip" aria-hidden="true"></span>
-                    <span class="status-label">Operational</span>
-                </span>
-            </div>
-            <h1 id="hero-title" class="page-title hero-title">Point-of-Sale Foundations</h1>
-            <p class="hero-lead">
-                A modular four-page web application demonstrating Model-View-Controller fundamentals, clean route resolution, and controller-managed data structures in Laravel.
-            </p>
+<div class="home-layout">
+    <section class="overview-section">
+        <h1 class="page-title">Point-of-Sale Foundations</h1>
+        <p class="page-lead">
+            A modular web application demonstrating Model-View-Controller architecture, component routing, and Blade templating in Laravel 11.
+        </p>
+
+        <div class="actions-grid">
+            <article class="action-card">
+                <h2 class="card-heading">Customer Accounts</h2>
+                <p class="card-text">
+                    Browse active client profiles and accounts retrieved through the <code>CustomerController</code> data layer.
+                </p>
+                <div class="card-action">
+                    <a href="{{ route('customers.index') }}" class="button button-primary">View Customers</a>
+                </div>
+            </article>
+
+            <article class="action-card">
+                <h2 class="card-heading">User Accounts</h2>
+                <p class="card-text">
+                    Audit system operators, cashier staff, and administrative personnel managed through the <code>UserController</code> data layer.
+                </p>
+                <div class="card-action">
+                    <a href="{{ route('users.index') }}" class="button button-primary">View Users</a>
+                </div>
+            </article>
         </div>
     </section>
 
-    <aside class="facts-panel" aria-label="System facts and specifications">
-        <div class="panel-header">
-            <span class="panel-kicker">SYSTEM LEDGER</span>
-            <span class="panel-badge">TFA-05</span>
-        </div>
-        <ul class="facts-list" role="list">
-            <li class="fact-item">
-                <span class="fact-num">04</span>
-                <div class="fact-details">
-                    <strong class="fact-label">Configured Routes</strong>
-                    <span class="fact-desc">Home, About, Customers, Users</span>
-                </div>
-            </li>
-            <li class="fact-item">
-                <span class="fact-num">02</span>
-                <div class="fact-details">
-                    <strong class="fact-label">In-Memory Directories</strong>
-                    <span class="fact-desc">Customer and staff user stores</span>
-                </div>
-            </li>
-            <li class="fact-item">
-                <span class="fact-num">00</span>
-                <div class="fact-details">
-                    <strong class="fact-label">Database Required</strong>
-                    <span class="fact-desc">Self-contained static array state</span>
-                </div>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- Two Prominent Directory Modules -->
-    <section class="directory-modules" aria-label="Application Directories">
-        <article class="directory-card card-customers">
-            <div class="card-meta">
-                <span class="module-number">DIR // 01</span>
-                <span class="record-pill">5 Records</span>
-            </div>
-            <div class="card-header">
-                <div class="card-symbol" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                </div>
-                <h2 class="card-title">Customer Accounts</h2>
-            </div>
-            <p class="card-description">
-                View customer directories populated from static PHP array structures before permanent database integration.
-            </p>
-            <div class="card-footer">
-                <a href="{{ route('customers.index') }}" class="button button-primary">
-                    <span>Open Customers</span>
-                    <span class="btn-arrow" aria-hidden="true">&rarr;</span>
-                </a>
-            </div>
-        </article>
-
-        <article class="directory-card card-users">
-            <div class="card-meta">
-                <span class="module-number">DIR // 02</span>
-                <span class="record-pill">5 Users</span>
-            </div>
-            <div class="card-header">
-                <div class="card-symbol" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="16" rx="2"/>
-                        <circle cx="9" cy="10" r="2"/>
-                        <path d="M15 8h2"/>
-                        <path d="M15 12h2"/>
-                        <path d="M7 16h10"/>
-                    </svg>
-                </div>
-                <h2 class="card-title">User Accounts</h2>
-            </div>
-            <p class="card-description">
-                Browse staff accounts, operational roles, and access credentials maintained inside the controller layer.
-            </p>
-            <div class="card-footer">
-                <a href="{{ route('users.index') }}" class="button button-primary">
-                    <span>Open Users</span>
-                    <span class="btn-arrow" aria-hidden="true">&rarr;</span>
-                </a>
-            </div>
-        </article>
-    </section>
-
-    <!-- Horizontal Architecture Feature -->
-    <section class="architecture-feature" aria-labelledby="arch-title">
-        <div class="feature-left">
-            <span class="market-tag tag-sage">SYSTEM BLUEPRINT</span>
-            <h2 id="arch-title" class="card-title feature-heading">Architecture &amp; Flow</h2>
-            <p class="card-description">
-                Examine how HTTP requests map through Laravel routing, execute controller methods, and populate Blade view templates.
-            </p>
-        </div>
-        <div class="feature-pipeline" aria-label="Request lifecycle pipeline">
-            <div class="pipe-node">
-                <span class="pipe-index">01</span>
-                <span class="pipe-name">URL Request</span>
-            </div>
-            <span class="pipe-connector" aria-hidden="true">&rarr;</span>
-            <div class="pipe-node">
-                <span class="pipe-index">02</span>
-                <span class="pipe-name">Router</span>
-            </div>
-            <span class="pipe-connector" aria-hidden="true">&rarr;</span>
-            <div class="pipe-node">
-                <span class="pipe-index">03</span>
-                <span class="pipe-name">Controller</span>
-            </div>
-            <span class="pipe-connector" aria-hidden="true">&rarr;</span>
-            <div class="pipe-node">
-                <span class="pipe-index">04</span>
-                <span class="pipe-name">Rendered View</span>
-            </div>
-        </div>
-        <div class="feature-actions">
-            <a href="{{ route('about') }}" class="button button-secondary">Learn About MVC</a>
+    <section class="overview-section" aria-labelledby="details-heading">
+        <h2 id="details-heading" class="section-title">Application Overview</h2>
+        <div class="details-card">
+            <ul class="details-list">
+                <li>
+                    <strong>Framework:</strong>
+                    <span>Laravel 11 running on PHP 8.2+</span>
+                </li>
+                <li>
+                    <strong>Architecture:</strong>
+                    <span>Model-View-Controller (MVC) request cycle</span>
+                </li>
+                <li>
+                    <strong>Data Source:</strong>
+                    <span>In-memory structured PHP datasets</span>
+                </li>
+                <li>
+                    <strong>Templating:</strong>
+                    <span>Semantic Blade layouts with accessible landmarks</span>
+                </li>
+            </ul>
         </div>
     </section>
 </div>
